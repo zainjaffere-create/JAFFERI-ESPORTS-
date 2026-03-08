@@ -1,0 +1,123 @@
+<html>
+        <head><title>Downloaded HTML</title></head>
+        <body>
+            <pre style="white-space: pre-wrap; word-wrap: break-word;"><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Zephyr Esports</title>
+<style>
+body { font-family: Arial; text-align:center; background:#121212; color:#fff; }
+h1 { color:#00f0ff; }
+form, .admin, table { display:inline-block; text-align:left; padding:20px; background:#1e1e1e; border-radius:10px; margin-top:20px; }
+input, select { width:100%; padding:8px; margin:5px 0; border-radius:5px; border:none; }
+button { padding:10px 20px; background:#00f0ff; border:none; border-radius:5px; cursor:pointer; margin-top:10px;}
+button:hover { background:#00c0cc; }
+table { color:white; border-collapse:collapse; width:100%; }
+th, td { border:1px solid #fff; padding:5px; text-align:center; }
+</style>
+</head>
+<body>
+
+<h1>Zephyr Esports - Player Registration</h1>
+<div id="playerDiv">
+<form id="playerForm">
+    <label>Name:</label><br><input type="text" name="name" required><br>
+    <label>Game Level:</label><br><input type="text" name="gameLevel" required><br>
+    <label>Game ID:</label><br><input type="text" name="gameId" required><br>
+    <label>Experience:</label><br><input type="text" name="experience" required><br>
+    <label>Type:</label><br>
+    <select name="type" required>
+        <option value="Classic">Classic</option>
+        <option value="Competitive">Competitive</option>
+    </select><br>
+    <label>WhatsApp Number:</label><br><input type="text" name="whatsapp" required><br>
+    <button type="submit">Submit</button>
+</form>
+</div>
+
+<div id="adminDiv" style="display:none;">
+<h1>Admin Portal</h1>
+<p>Admin WhatsApp: 0320 2605079</p>
+<table id="adminTable">
+<tr><th>Name</th><th>Game Level</th><th>Game ID</th><th>Experience</th><th>Type</th><th>WhatsApp</th><th>Status</th><th>Action</th></tr>
+</table>
+<button onclick="logoutAdmin()">Logout</button>
+</div>
+
+<script>
+let submissions = JSON.parse(localStorage.getItem('zephyrData') || '[]');
+
+// --- Player Form ---
+document.getElementById('playerForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const data = {
+        name: this.name.value,
+        gameLevel: this.gameLevel.value,
+        gameId: this.gameId.value,
+        experience: this.experience.value,
+        type: this.type.value,
+        whatsapp: this.whatsapp.value,
+        status: 'Pending'
+    };
+    submissions.push(data);
+    localStorage.setItem('zephyrData', JSON.stringify(submissions));
+    alert('Your request has been submitted!');
+    this.reset();
+});
+
+// --- Admin login ---
+function loginAdmin(){
+    const pass = prompt('Enter Admin Password:');
+    if(pass === 'zain56'){
+        document.getElementById('playerDiv').style.display='none';
+        document.getElementById('adminDiv').style.display='block';
+        renderAdminTable();
+    } else {
+        alert('Wrong Password!');
+    }
+}
+
+// --- Render Admin Table ---
+function renderAdminTable(){
+    const table = document.getElementById('adminTable');
+    table.innerHTML = `<tr><th>Name</th><th>Game Level</th><th>Game ID</th><th>Experience</th><th>Type</th><th>WhatsApp</th><th>Status</th><th>Action</th></tr>`;
+    submissions.forEach((p,i)=>{
+        const row = table.insertRow();
+        row.insertCell(0).innerText = p.name;
+        row.insertCell(1).innerText = p.gameLevel;
+        row.insertCell(2).innerText = p.gameId;
+        row.insertCell(3).innerText = p.experience;
+        row.insertCell(4).innerText = p.type;
+        row.insertCell(5).innerText = p.whatsapp;
+        row.insertCell(6).innerText = p.status;
+        const actions = row.insertCell(7);
+        actions.innerHTML = `<button onclick="updateStatus(${i},'Accepted')">Accept</button>
+                             <button onclick="updateStatus(${i},'Rejected')">Reject</button>`;
+    });
+}
+
+// --- Update status ---
+function updateStatus(index, status){
+    submissions[index].status = status;
+    localStorage.setItem('zephyrData', JSON.stringify(submissions));
+    renderAdminTable();
+}
+
+// --- Logout ---
+function logoutAdmin(){
+    document.getElementById('adminDiv').style.display='none';
+    document.getElementById('playerDiv').style.display='block';
+}
+
+// --- Admin login button ---
+const adminBtn = document.createElement('button');
+adminBtn.innerText = 'Admin Login';
+adminBtn.onclick = loginAdmin;
+document.body.insertBefore(adminBtn, document.getElementById('playerDiv'));
+</script>
+
+</body>
+</html></pre>
+        </body>
+    </html>
